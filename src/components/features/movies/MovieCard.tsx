@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { ROUTES } from '@/constants/routes'
 import type { Movie } from '@/types/api'
 
@@ -15,7 +15,7 @@ export function MovieCard({ movie }: MovieCardProps) {
       <Card className="overflow-hidden transition-all hover:ring-2 hover:ring-primary">
         <div className="relative aspect-[2/3]">
           <Image
-            src={movie.poster}
+            src={`${process.env.NEXT_PUBLIC_S3_URL}${movie.poster}`}
             alt={movie.title}
             fill
             className="object-cover"
@@ -28,9 +28,7 @@ export function MovieCard({ movie }: MovieCardProps) {
               {movie.category.name}
             </Badge>
           )}
-          <h3 className="text-sm font-medium leading-tight line-clamp-2">
-            {movie.title}
-          </h3>
+          <CardTitle className="line-clamp-2">{movie.title}</CardTitle>
         </CardContent>
       </Card>
     </Link>

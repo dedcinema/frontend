@@ -64,7 +64,7 @@ export function OtpForm() {
         code: data.code,
         type: detectType(identifier),
       })
-      router.push(ROUTES.ACCOUNT.ROOT)
+      router.push(ROUTES.HOME)
     } catch {
       toast.error('Невірний код. Спробуйте ще раз.')
     }
