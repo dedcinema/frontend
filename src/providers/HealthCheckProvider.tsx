@@ -10,7 +10,7 @@ export function HealthCheckProvider({ children }: { children: React.ReactNode })
     api.get('/health').catch(() => setIsHealthy(false))
   }, [])
 
-  if (!isHealthy) {
+  if (!isHealthy && process.env.NODE_ENV !== 'development') {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">

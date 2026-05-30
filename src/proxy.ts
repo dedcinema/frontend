@@ -4,7 +4,7 @@ import { ROUTES } from '@/constants/routes'
 const PROTECTED_ROUTES = [ROUTES.ACCOUNT.ROOT]
 const AUTH_ROUTES = [ROUTES.AUTH.LOGIN, ROUTES.AUTH.VERIFY]
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get('accessToken')?.value
   const { pathname } = request.nextUrl
 
