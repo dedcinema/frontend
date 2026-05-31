@@ -1,29 +1,13 @@
-'use client'
-
-import { useMovies } from '@/api/hooks/useMovies'
+import { Suspense } from 'react'
+import type { Movie } from '@/types/api'
 import { MovieCard } from '@/components/features/movies/MovieCard'
-import { Skeleton } from '@/components/ui/skeleton'
+import { MovieGridSkeleton } from '@/components/features/movies/MovieGridSkeleton'
 
-const SKELETON_COUNT = 10
-
-function MovieGridSkeleton() {
-  return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-        <div key={i} className="flex flex-col gap-2">
-          <Skeleton className="aspect-[2/3] w-full rounded-xl" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-3 w-1/2" />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-export default function HomePage() {
-  const { data: movies, isLoading } = useMovies()
-
-  if (isLoading) return <MovieGridSkeleton />
+async function MovieGrid() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/movies`, {
+    next: { revalidate: 180 },
+  })
+  const movies: Movie[] = await res.json()
 
   if (!movies || movies.length === 0) {
     return (
@@ -42,5 +26,13 @@ export default function HomePage() {
         <MovieCard key={movie.id} movie={movie} />
       ))}
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<MovieGridSkeleton />}>
+      <MovieGrid />
+    </Suspense>
   )
 }

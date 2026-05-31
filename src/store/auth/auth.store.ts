@@ -11,6 +11,9 @@ export const useAuthStore = create<AuthStore>()(
       setIsAuthenticated: (v) => set({ isAuthenticated: v }),
       logout: () => set({ isAuthenticated: false, user: null }),
     }),
-    { name: 'auth', storage: createJSONStorage(() => localStorage) }
+    {
+      name: 'auth',
+      storage: createJSONStorage(() => localStorage),
+    }
   )
 )

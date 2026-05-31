@@ -4,6 +4,7 @@ import { ReactQueryProvider } from '@/providers/ReactQueryProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { HealthCheckProvider } from '@/providers/HealthCheckProvider'
 import { ToastProvider } from '@/providers/ToastProvider'
+import { CurrentUserSync } from '@/components/layout/CurrentUserSync'
 
 export const metadata: Metadata = {
   title: 'DedCinema',
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReactQueryProvider>
           <ThemeProvider>
             <HealthCheckProvider>
+              <CurrentUserSync />
               <ToastProvider />
               {children}
             </HealthCheckProvider>
