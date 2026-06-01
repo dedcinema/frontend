@@ -1,7 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { screeningsApi } from '@/api/requests/screenings'
+import { ROUTES } from '@/constants/routes'
 import type { Screening } from '@/types/api'
 
 const dateFormatter = new Intl.DateTimeFormat('uk-UA', {
@@ -20,14 +22,14 @@ function ScreeningItem({ screening }: { screening: Screening }) {
   const end = new Date(screening.endAt)
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
+    <Link href={ROUTES.SCREENINGS.DETAILS(screening.id)} className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
       <div className="flex flex-col gap-0.5">
         <span className="text-sm font-medium capitalize">{dateFormatter.format(start)}</span>
         <span className="text-xs text-muted-foreground">
           {timeFormatter.format(start)} — {timeFormatter.format(end)}
         </span>
       </div>
-    </div>
+    </Link>
   )
 }
 

@@ -10,6 +10,10 @@ export const ROUTES = {
     DETAILS: (slug: string) => `/movies/${slug}`,
   },
 
+  SCREENINGS: {
+    DETAILS: (id: string) => `/screenings/${id}`,
+  },
+
   ACCOUNT: {
     ROOT: '/account',
     BOOKINGS: '/account/bookings',

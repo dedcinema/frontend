@@ -50,11 +50,13 @@ export interface Screening {
 }
 
 export interface Seat {
+  id: string;
   row: number;
-  column: number;
-  type: string;
+  number: number;
   price: number;
-  isBooked: boolean;
+  status: 'available' | 'reserved';
+  type: string;
+  hallId: string;
 }
 
 export interface Booking {
