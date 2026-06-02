@@ -25,7 +25,7 @@ export function MovieCard({ movie }: MovieCardProps) {
         <CardContent className="p-3 space-y-1">
           {movie.category && (
             <Badge variant="secondary" className="text-xs">
-              {movie.category.name}
+              {movie.category.title}
             </Badge>
           )}
           <CardTitle className="line-clamp-2">{movie.title}</CardTitle>

@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { useProfile } from '@/api/hooks/useProfile'
-import { useAuth } from '@/api/hooks/useAuth'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 function ProfileSkeleton() {
@@ -15,14 +13,12 @@ function ProfileSkeleton() {
         <Skeleton className="h-4 w-56" />
         <Skeleton className="h-4 w-32" />
       </div>
-      <Skeleton className="h-8 w-24" />
     </div>
   )
 }
 
 export default function AccountPage() {
   const { data: user, isLoading } = useProfile()
-  const { exit } = useAuth()
   const [avatarError, setAvatarError] = useState(false)
 
   if (isLoading) return <ProfileSkeleton />
@@ -53,10 +49,6 @@ export default function AccountPage() {
           <p className="text-sm text-muted-foreground">{user.phone}</p>
         )}
       </div>
-
-      <Button variant="outline" size="sm" onClick={exit}>
-        Вийти
-      </Button>
     </div>
   )
 }
