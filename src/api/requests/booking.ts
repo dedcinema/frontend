@@ -1,5 +1,5 @@
 import { instance } from '../instance'
-import type { Booking } from '@/types/api'
+import type { BookingDetails } from '@/types/api'
 
 export interface PaymentInitPayload {
   screeningId: string
@@ -12,7 +12,7 @@ export interface PaymentInitResponse {
 
 export const bookingApi = {
   list: () =>
-    instance.get<Booking[]>('/booking').then((r) => r.data),
+    instance.get<BookingDetails[]>('/bookings').then((r) => r.data),
 
   initPayment: (payload: PaymentInitPayload) =>
     instance.post<PaymentInitResponse>('/payment/init', payload).then((r) => r.data),

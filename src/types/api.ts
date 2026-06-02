@@ -23,30 +23,24 @@ export interface Movie {
 
 export interface Theater {
   id: string;
-  title: string;
+  name: string;
   address: string;
-}
-
-export interface RowConfig {
-  row: number;
-  columns: number;
-  type: string;
-  price: number;
 }
 
 export interface Hall {
   id: string;
-  title: string;
-  theaterId: string;
-  layout: RowConfig[];
+  name: string;
+  theaterId?: string;
 }
 
 export interface Screening {
   id: string;
-  movieId: string;
-  hallId: string;
   startAt: string;
   endAt: string;
+  hall: { id: string; name: string }
+  theater: { id: string; name: string; address: string }
+  movie?: { id: string; title: string; slug: string }
+  seatTypes?: { type: string; price: number }[]
 }
 
 export interface Seat {
@@ -65,4 +59,29 @@ export interface Booking {
   seats: Seat[];
   totalPrice: number;
   status: string;
+}
+
+export interface BookingDetails {
+  id: string;
+  qrCode: string;
+  screeningTime: string;
+  movie: {
+    id: string;
+    title: string;
+    poster: string;
+    slug: string;
+  };
+  hall: {
+    id: string;
+    name: string;
+  };
+  theater: {
+    id: string;
+    name: string;
+  };
+  seats: Array<{
+    id: string;
+    row: number;
+    number: number;
+  }>;
 }
