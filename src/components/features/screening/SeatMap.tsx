@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { useSeats } from '@/api/hooks/useSeats'
+import { paymentApi } from '@/api/requests/payment'
 import { cn } from '@/lib/utils'
 import type { Hall, Screening, Seat } from '@/types/api'
 import { SeatMapGrid } from './variants/SeatMapGrid'
@@ -22,11 +24,31 @@ const VARIANT_LABELS: Record<Variant, string> = {
 
 interface BookingSummaryProps {
   selectedSeats: Seat[]
+  screening: Screening
   onClear: () => void
 }
 
-function BookingSummary({ selectedSeats, onClear }: BookingSummaryProps) {
-  const total = selectedSeats.reduce((sum, s) => sum + s.price, 0)
+function BookingSummary({ selectedSeats, screening, onClear }: BookingSummaryProps) {
+  const [isLoading, setIsLoading] = useState(false)
+  const getPrice = (seat: Seat) =>
+    screening.seatTypes?.find((st) => st.type === seat.type)?.price ?? seat.price
+
+  const total = selectedSeats.reduce((sum, s) => sum + getPrice(s), 0)
+
+  async function handlePay() {
+    if (selectedSeats.length === 0) return
+    setIsLoading(true)
+    try {
+      const data = await paymentApi.init(
+        screening.id,
+        selectedSeats.map((s) => ({ seatId: s.id, price: getPrice(s) })),
+      )
+      window.location.href = data.url
+    } catch {
+      toast.error('Не вдалося ініціювати оплату')
+      setIsLoading(false)
+    }
+  }
 
   if (selectedSeats.length === 0) {
     return (
@@ -43,9 +65,7 @@ function BookingSummary({ selectedSeats, onClear }: BookingSummaryProps) {
           {selectedSeats.length} {selectedSeats.length === 1 ? 'місце' : 'місця'}
         </span>
         <span className="text-xs text-muted-foreground">
-          {selectedSeats
-            .map((s) => `р.${s.row} м.${s.number}`)
-            .join(', ')}
+          {selectedSeats.map((s) => `р.${s.row} м.${s.number}`).join(', ')}
         </span>
       </div>
       <div className="flex items-center gap-3">
@@ -55,6 +75,13 @@ function BookingSummary({ selectedSeats, onClear }: BookingSummaryProps) {
           className="text-xs text-muted-foreground underline-offset-2 hover:underline"
         >
           Скинути
+        </button>
+        <button
+          onClick={handlePay}
+          disabled={isLoading}
+          className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity disabled:opacity-60"
+        >
+          {isLoading ? 'Завантаження...' : 'Оплатити'}
         </button>
       </div>
     </div>
@@ -117,6 +144,7 @@ export function SeatMap({ hall, screening }: SeatMapProps2) {
 
       <BookingSummary
         selectedSeats={selectedSeats}
+        screening={screening}
         onClear={() => setSelectedSeats([])}
       />
 
