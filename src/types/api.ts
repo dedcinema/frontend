@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  name: string;
+  title: string;
   email: string;
   phone: string;
   avatar: string;
@@ -8,7 +8,7 @@ export interface User {
 
 export interface Category {
   id: string;
-  name: string;
+  title: string;
   slug: string;
 }
 
@@ -23,7 +23,7 @@ export interface Movie {
 
 export interface Theater {
   id: string;
-  name: string;
+  title: string;
   address: string;
 }
 
@@ -36,7 +36,7 @@ export interface RowConfig {
 
 export interface Hall {
   id: string;
-  name: string;
+  title: string;
   theaterId: string;
   layout: RowConfig[];
 }
