@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAuth } from '@/api/hooks'
+import { authApi } from '@/api/requests'
 import {
   otpSendSchema,
   otpVerifySchema,
@@ -28,6 +29,7 @@ export function OtpForm() {
   const { sendOtp, verifyOtp } = useAuth()
   const [step, setStep] = useState<Step>('send')
   const [identifier, setIdentifier] = useState('')
+  const [isTgLoading, setIsTgLoading] = useState(false)
 
   const sendForm = useForm<OtpSendForm>({
     resolver: zodResolver(otpSendSchema),
@@ -111,25 +113,55 @@ export function OtpForm() {
     )
   }
 
+  async function handleTelegramLogin() {
+    setIsTgLoading(true)
+    try {
+      const data = await authApi.getTelegramUrl()
+      window.location.href = data.url
+    } catch (err) {
+      console.error('[TG login error]', err)
+      toast.error('Не вдалося отримати посилання Telegram')
+      setIsTgLoading(false)
+    }
+  }
+
   return (
-    <form onSubmit={sendForm.handleSubmit(handleSend)} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="identifier">Email або телефон</Label>
-        <Input
-          id="identifier"
-          placeholder="you@example.com або +380..."
-          {...sendForm.register('identifier')}
-        />
-        {sendForm.formState.errors.identifier && (
-          <p className="text-sm text-destructive">
-            {sendForm.formState.errors.identifier.message}
-          </p>
-        )}
+    <div className="space-y-4">
+      <form onSubmit={sendForm.handleSubmit(handleSend)} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="identifier">Email або телефон</Label>
+          <Input
+            id="identifier"
+            placeholder="you@example.com або +380..."
+            {...sendForm.register('identifier')}
+          />
+          {sendForm.formState.errors.identifier && (
+            <p className="text-sm text-destructive">
+              {sendForm.formState.errors.identifier.message}
+            </p>
+          )}
+        </div>
+
+        <Button type="submit" className="w-full" disabled={sendOtp.isPending}>
+          {sendOtp.isPending ? 'Надсилання...' : 'Отримати код'}
+        </Button>
+      </form>
+
+      <div className="relative flex items-center gap-3">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs text-muted-foreground">або</span>
+        <div className="h-px flex-1 bg-border" />
       </div>
 
-      <Button type="submit" className="w-full" disabled={sendOtp.isPending}>
-        {sendOtp.isPending ? 'Надсилання...' : 'Отримати код'}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        disabled={isTgLoading}
+        onClick={handleTelegramLogin}
+      >
+        ✈️ {isTgLoading ? 'Завантаження...' : 'Увійти через Telegram'}
       </Button>
-    </form>
+    </div>
   )
 }
