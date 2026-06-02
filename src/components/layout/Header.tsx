@@ -14,7 +14,7 @@ export function Header() {
 
         <nav>
           <Link
-            href={ROUTES.HOME}
+            href={ROUTES.MOVIES.LIST}
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             Фільми
