@@ -19,6 +19,11 @@ export interface Movie {
   poster: string;
   description?: string;
   category?: Category;
+  banner?: string;
+  duration?: number;
+  ratingAge?: number;
+  country?: string;
+  releaseDate?: string;
 }
 
 export interface Theater {
