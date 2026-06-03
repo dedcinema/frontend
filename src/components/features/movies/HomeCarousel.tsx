@@ -55,23 +55,31 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
           {movies.map((movie) => (
             <div
               key={movie.id}
-              className="min-w-0 shrink-0 basis-full sm:basis-1/2 lg:basis-1/4 px-0.5"
+              className="min-w-0 shrink-0 basis-full px-0.5 sm:basis-1/2 lg:basis-1/4"
             >
               <Link
                 href={ROUTES.MOVIES.DETAILS(movie.slug)}
-                className="group relative block aspect-[2/3] overflow-hidden"
+                className="glow-card group relative block aspect-[2/3] overflow-hidden rounded-xl"
               >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_S3_URL}${movie.poster}`}
                   alt={movie.title}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-                <p className="absolute bottom-0 left-0 right-0 p-3 text-sm font-semibold text-white line-clamp-2">
-                  {movie.title}
-                </p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  {movie.category && (
+                    <span className="text-technical mb-1 inline-block text-[0.7rem] uppercase tracking-widest text-primary/80">
+                      {movie.category.title}
+                    </span>
+                  )}
+                  <p className="text-sm font-semibold leading-snug text-white line-clamp-2">
+                    {movie.title}
+                  </p>
+                </div>
               </Link>
             </div>
           ))}
@@ -81,14 +89,14 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
       <button
         onClick={scrollPrev}
         aria-label="Попередній"
-        className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
+        className="surface absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 text-white transition-colors hover:text-primary"
       >
         <ChevronLeft className="size-6" />
       </button>
       <button
         onClick={scrollNext}
         aria-label="Наступний"
-        className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
+        className="surface absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full p-2 text-white transition-colors hover:text-primary"
       >
         <ChevronRight className="size-6" />
       </button>
@@ -101,7 +109,9 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
               onClick={() => emblaApi?.scrollTo(i)}
               aria-label={`Слайд ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === selectedIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/30'
+                i === selectedIndex
+                  ? 'w-4 bg-primary'
+                  : 'w-1.5 bg-white/25 hover:bg-white/50'
               }`}
             />
           ))}

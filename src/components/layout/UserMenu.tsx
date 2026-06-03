@@ -65,7 +65,7 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <nav className="absolute right-0 top-11 z-50 flex flex-col rounded-lg border border-neutral-800 bg-neutral-900 shadow-md overflow-hidden">
+        <nav className="surface absolute right-0 top-11 z-50 flex flex-col rounded-xl overflow-hidden shadow-xl">
           <Link
             href={ROUTES.ACCOUNT.ROOT}
             onClick={() => setOpen(false)}
