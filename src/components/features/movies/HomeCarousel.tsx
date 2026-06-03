@@ -4,7 +4,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ROUTES } from '@/constants/routes'
 import type { Movie } from '@/types/api'
 
@@ -14,6 +14,8 @@ interface HomeCarouselProps {
 
 export function HomeCarousel({ movies }: HomeCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' })
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [snapCount, setSnapCount] = useState(0)
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
@@ -30,6 +32,18 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
 
     root.addEventListener('wheel', onWheel, { passive: false })
     return () => root.removeEventListener('wheel', onWheel)
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap())
+
+    setSnapCount(emblaApi.scrollSnapList().length)
+    onSelect()
+
+    emblaApi.on('select', onSelect)
+    return () => { emblaApi.off('select', onSelect) }
   }, [emblaApi])
 
   if (movies.length === 0) return null
@@ -78,6 +92,21 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
       >
         <ChevronRight className="size-6" />
       </button>
+
+      {snapCount > 1 && (
+        <div className="flex justify-center gap-1.5 pb-3 pt-6">
+          {Array.from({ length: snapCount }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => emblaApi?.scrollTo(i)}
+              aria-label={`Слайд ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === selectedIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
