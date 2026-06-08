@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import type { Hall, Screening, Seat } from '@/types/api'
 import { SeatMapGrid } from './variants/SeatMapGrid'
 import { SeatMapSvg } from './variants/SeatMapSvg'
+import { SeatMapZoom } from './variants/SeatMapZoom'
 import type { SeatMapProps } from './types'
 
 type Variant = 'grid' | 'svg' | 'zoom' | 'wasm'
@@ -15,6 +16,7 @@ type Variant = 'grid' | 'svg' | 'zoom' | 'wasm'
 const VARIANTS: Partial<Record<Variant, React.ComponentType<SeatMapProps>>> = {
   grid: SeatMapGrid,
   svg: SeatMapSvg,
+  zoom: SeatMapZoom,
 }
 
 const VARIANT_LABELS: Record<Variant, string> = {
