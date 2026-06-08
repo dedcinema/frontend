@@ -44,7 +44,7 @@ export interface Screening {
   endAt: string;
   hall: { id: string; name: string }
   theater: { id: string; name: string; address: string }
-  movie?: { id: string; title: string; slug: string }
+  movie?: { id: string; title: string; slug: string; banner?: string }
   seatTypes?: { type: string; price: number }[]
 }
 
