@@ -14,15 +14,12 @@ import {
   type OtpVerifyForm,
 } from '@/schemas/auth/otp.schema'
 import { ROUTES } from '@/constants/routes'
+import { detectType } from '@/lib/detect-type'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 type Step = 'send' | 'verify'
-
-function detectType(value: string): 'email' | 'phone' {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? 'email' : 'phone'
-}
 
 export function OtpForm() {
   const router = useRouter()
