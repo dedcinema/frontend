@@ -1,0 +1,15 @@
+{
+  "name": "seat-engine",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "seat_engine_bg.wasm",
+    "seat_engine.js",
+    "seat_engine.d.ts"
+  ],
+  "main": "seat_engine.js",
+  "types": "seat_engine.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

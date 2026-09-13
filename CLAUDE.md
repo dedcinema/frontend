@@ -370,6 +370,16 @@ constants:    SCREAMING_SNAKE   ROUTES.LOGIN
 
 ---
 
+## WASM (src/wasm/seat-engine)
+
+Rust crate (`wasm-bindgen`), скомпільований вручну через `wasm-pack build --target web --out-dir ../../public/wasm/seat-engine` з `src/wasm/seat-engine/`. Немає npm/build-скрипта і немає Rust на Vercel — **скомпільований вивід (`public/wasm/seat-engine/*.js`, `*.wasm`, `*.d.ts`) закомічений у git як звичайний статичний ассет**, не білдиться під час деплою.
+
+**Пастка**: `wasm-pack build` щоразу перегенеровує `public/wasm/seat-engine/.gitignore` (вміст: `*`) — це власна дефолтна поведінка wasm-pack, розрахована на те, що вивід білдиться в CI, а не комітиться. Тут навпаки: після будь-якого перезбирання цього crate **видали цей `.gitignore` перед комітом**, інакше оновлений вивід тихо не потрапить у git (саме так це вперше зламало білд на Vercel — `public/wasm/seat-engine/*` не був закомічений взагалі, з 2026-06-08).
+
+`src/wasm/seat-engine/target/` (сирий Cargo build cache, не вивід wasm-pack) — ігнорується через `/src/wasm/*/target` у корневому `.gitignore`; ніколи не комітиться.
+
+---
+
 ## API ендпоінти
 
 ```
