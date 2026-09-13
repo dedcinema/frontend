@@ -25,7 +25,7 @@ function Avatar({ user }: { user: UserType }) {
 
   return (
     <div className="size-8 rounded-full bg-primary flex items-center justify-center text-xs font-semibold text-primary-foreground">
-      {user.name[0].toUpperCase()}
+      {user.name ? user.name[0].toUpperCase() : <User className="size-4" />}
     </div>
   )
 }

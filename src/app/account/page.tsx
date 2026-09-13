@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Camera, Loader2 } from 'lucide-react'
+import { Camera, Loader2, User } from 'lucide-react'
 import { useProfile, useUpdateAvatar, useUpdateProfile } from '@/api/hooks/useProfile'
 import { usersApi } from '@/api/requests/users'
 import { Button } from '@/components/ui/button'
@@ -217,7 +217,7 @@ export default function AccountPage() {
             />
           ) : (
             <div className="flex size-24 items-center justify-center rounded-full bg-primary text-3xl font-semibold text-primary-foreground">
-              {user.name[0]?.toUpperCase()}
+              {user.name ? user.name[0].toUpperCase() : <User className="size-8" />}
             </div>
           )}
 
