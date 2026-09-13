@@ -55,6 +55,8 @@ export default function WasmTestPage() {
         const mod = (await import(
           /* webpackIgnore: true */
           /* turbopackIgnore: true */
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore — runtime-only public/ ESM, not in TS module graph
           '/wasm/seat-engine/seat_engine.js'
         )) as SeatEngineModule
 
