@@ -7,6 +7,8 @@ describe('normalizeAgentPath', () => {
     ['/movies/dune', '/movies/dune'],
     ['/movies/the-dark-knight', '/movies/the-dark-knight'],
     ['/screenings/abc_123-X', '/screenings/abc_123-X'],
+    ['/pay/abc_123', '/pay/abc_123'],
+    ['/pay/abc?x=1#t', '/pay/abc'],
   ])('дозволяє %s', (input, expected) => {
     expect(normalizeAgentPath(input)).toBe(expected)
   })
@@ -16,6 +18,13 @@ describe('normalizeAgentPath', () => {
     expect(normalizeAgentPath('/movies/dune?x=1#top')).toBe('/movies/dune')
     expect(normalizeAgentPath('/#hero')).toBe('/')
   })
+
+  it.each(['/pay', '/pay/', '/pay/a/b', '/pay/%2e', '/pay/..', '/pay/a.b', '//pay/abc'])(
+    'відхиляє %s',
+    (input) => {
+      expect(normalizeAgentPath(input)).toBeNull()
+    },
+  )
 
   describe('category у /movies', () => {
     it.each([

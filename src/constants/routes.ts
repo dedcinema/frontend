@@ -15,6 +15,10 @@ export const ROUTES = {
     DETAILS: (id: string) => `/screenings/${id}`,
   },
 
+  PAY: {
+    DETAILS: (id: string) => `/pay/${id}`,
+  },
+
   ACCOUNT: {
     ROOT: '/account',
     BOOKINGS: '/account/bookings',

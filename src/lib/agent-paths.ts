@@ -3,6 +3,7 @@ const ALLOWED_PATHS = [
   /^\/movies$/,
   /^\/movies\/[a-z0-9-]+$/,
   /^\/screenings\/[A-Za-z0-9_-]+$/,
+  /^\/pay\/[A-Za-z0-9_-]+$/,
 ]
 
 const CATEGORY_SLUGS = ['action', 'drama', 'crime', 'sci-fi', 'comedy'] as const
