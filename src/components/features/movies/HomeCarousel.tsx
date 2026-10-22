@@ -4,15 +4,38 @@ import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { ROUTES } from '@/constants/routes'
 import type { Movie } from '@/types/api'
+import { HomeCarouselSkeleton } from './HomeCarouselSkeleton'
+
+const CAROUSEL_SIZE = 10
+
+const subscribe = () => () => {}
+
+function pickRandom(movies: Movie[], count: number): Movie[] {
+  const copy = [...movies]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy.slice(0, count)
+}
 
 interface HomeCarouselProps {
   movies: Movie[]
 }
 
-export function HomeCarousel({ movies }: HomeCarouselProps) {
+export function HomeCarousel({ movies: allMovies }: HomeCarouselProps) {
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  )
+  const movies = useMemo(
+    () => (mounted ? pickRandom(allMovies, CAROUSEL_SIZE) : null),
+    [mounted, allMovies],
+  )
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [snapCount, setSnapCount] = useState(0)
@@ -46,11 +69,14 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
     return () => { emblaApi.off('select', onSelect) }
   }, [emblaApi])
 
-  if (movies.length === 0) return null
+  if (allMovies.length === 0) return null
 
   return (
     <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)' }} className="relative">
       <div ref={emblaRef} className="overflow-hidden">
+        {movies === null ? (
+          <HomeCarouselSkeleton />
+        ) : (
         <div className="flex">
           {movies.map((movie) => (
             <div
@@ -84,6 +110,7 @@ export function HomeCarousel({ movies }: HomeCarouselProps) {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       <button

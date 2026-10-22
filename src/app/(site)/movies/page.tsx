@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 
 async function MovieGrid({ category }: { category?: string }) {
   const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/movies`)
+  url.searchParams.set('limit', '100')
   if (category) url.searchParams.set('category', category)
 
   const res = await fetch(url.toString(), { next: { revalidate: 180 } })

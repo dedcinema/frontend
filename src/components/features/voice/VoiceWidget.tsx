@@ -22,7 +22,7 @@ export function VoiceWidget() {
   if (!agentId) return null
 
   return (
-    <div className="min-h-12 md:shrink-0">
+    <div className="min-h-12 md:flex md:h-12 md:shrink-0 md:items-center">
       {mounted && (
         <hanc-ai-pill-call
           className="voice-widget"
