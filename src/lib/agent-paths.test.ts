@@ -17,6 +17,41 @@ describe('normalizeAgentPath', () => {
     expect(normalizeAgentPath('/#hero')).toBe('/')
   })
 
+  describe('category у /movies', () => {
+    it.each([
+      ['/movies?category=comedy', '/movies?category=comedy'],
+      ['/movies?category=sci-fi', '/movies?category=sci-fi'],
+      ['/movies?category=action', '/movies?category=action'],
+      ['/movies?category=drama', '/movies?category=drama'],
+      ['/movies?category=crime', '/movies?category=crime'],
+      ['/movies?category=comedy#top', '/movies?category=comedy'],
+      ['/movies?x=1&category=drama', '/movies?category=drama'],
+      ['/movies?category=comedy&x=1', '/movies?category=comedy'],
+      ['/movies?category=horror', '/movies'],
+      ['/movies?category=Comedy', '/movies'],
+      ['/movies?category=', '/movies'],
+      ['/movies?x=1', '/movies'],
+      ['/movies?page=2', '/movies'],
+      ['/movies?category=comedy&category=drama', '/movies'],
+      ['/movies?category=comedy&category=comedy', '/movies'],
+      ['/movies?category=comedy,drama', '/movies'],
+    ])('%s → %s', (input, expected) => {
+      expect(normalizeAgentPath(input)).toBe(expected)
+    })
+
+    it('інші шляхи і далі відкидають query', () => {
+      expect(normalizeAgentPath('/screenings/abc?category=comedy')).toBe('/screenings/abc')
+      expect(normalizeAgentPath('/movies/dune?category=comedy')).toBe('/movies/dune')
+      expect(normalizeAgentPath('/?category=comedy')).toBe('/')
+    })
+
+    it('відхиляє небезпечні шляхи навіть з валідною category', () => {
+      expect(normalizeAgentPath('//evil.com?category=comedy')).toBeNull()
+      expect(normalizeAgentPath('/account?category=comedy')).toBeNull()
+      expect(normalizeAgentPath('https://x/movies?category=comedy')).toBeNull()
+    })
+  })
+
   it.each([
     '//evil.com',
     '//evil.com?x=1',
