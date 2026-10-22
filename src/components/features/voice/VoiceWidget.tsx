@@ -2,25 +2,14 @@
 
 import { useSyncExternalStore } from 'react'
 import Script from 'next/script'
-import { usePathname } from 'next/navigation'
-import { ROUTES } from '@/constants/routes'
 
 const WIDGET_SCRIPT_SRC = 'https://unpkg.com/hanc-webrtc-widgets@2.11.0'
 const VOICE_SERVICE_URL = 'https://voice.hanc.ai'
-const DEFAULT_THEME = 'tangerine'
-
-function isWidgetPage(pathname: string) {
-  return (
-    pathname === ROUTES.HOME ||
-    pathname === ROUTES.MOVIES.LIST ||
-    pathname.startsWith(`${ROUTES.MOVIES.LIST}/`)
-  )
-}
+const DEFAULT_THEME = 'amber'
 
 const subscribe = () => () => {}
 
 export function VoiceWidget() {
-  const pathname = usePathname()
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
@@ -30,16 +19,24 @@ export function VoiceWidget() {
   const agentId = process.env.NEXT_PUBLIC_HANC_AGENT_ID
   const theme = process.env.NEXT_PUBLIC_HANC_WIDGET_THEME || DEFAULT_THEME
 
-  if (!agentId || !mounted || !isWidgetPage(pathname)) return null
+  if (!agentId) return null
 
   return (
-    <>
-      <hanc-ai-inline-call
-        agent-id={agentId}
-        theme={theme}
-        voice-service-url={VOICE_SERVICE_URL}
-      />
+    <div className="min-h-12 md:shrink-0">
+      {mounted && (
+        <hanc-ai-pill-call
+          className="voice-widget"
+          agent-id={agentId}
+          theme={theme}
+          theme-mode="dark"
+          voice-service-url={VOICE_SERVICE_URL}
+          button-start-text="Поговорити з агентом"
+          button-connecting-text="З'єднання..."
+          button-end-text="Завершити розмову"
+          orb-size={40}
+        />
+      )}
       <Script src={WIDGET_SCRIPT_SRC} strategy="lazyOnload" />
-    </>
+    </div>
   )
 }

@@ -152,3 +152,8 @@
     letter-spacing: -0.01em;
   }
 }
+
+hanc-ai-pill-call.voice-widget::part(pill-button) {
+  font-family: var(--font-jetbrains-mono), monospace;
+  border: 1px solid color-mix(in oklch, var(--primary) 40%, transparent);
+}
