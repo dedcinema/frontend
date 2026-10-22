@@ -64,11 +64,12 @@ export function VoiceWidget() {
   if (!agentId) return null
 
   return (
-    <div className="min-h-12 md:flex md:h-12 md:shrink-0 md:items-center">
+    <>
       {mounted && (
-        <hanc-ai-pill-call
+        <hanc-ai-pill-floating-call
           ref={widgetRef}
           className="voice-widget"
+          position="bottom-right"
           agent-id={agentId}
           theme={theme}
           theme-mode="dark"
@@ -80,6 +81,6 @@ export function VoiceWidget() {
         />
       )}
       <Script src={WIDGET_SCRIPT_SRC} strategy="lazyOnload" />
-    </div>
+    </>
   )
 }

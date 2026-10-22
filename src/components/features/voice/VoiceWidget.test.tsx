@@ -28,7 +28,7 @@ describe('VoiceWidget', () => {
 
   it('call-start викликає linkVoiceCall один раз', () => {
     const { container } = render(<VoiceWidget />)
-    const el = container.querySelector('hanc-ai-pill-call')!
+    const el = container.querySelector('hanc-ai-pill-floating-call')!
     el.dispatchEvent(new Event('call-start'))
     expect(linkMock).toHaveBeenCalledTimes(1)
   })
@@ -36,7 +36,7 @@ describe('VoiceWidget', () => {
   it('повторний call-start під час виконання не дублює виклик', () => {
     linkMock.mockReturnValue(new Promise(() => {}))
     const { container } = render(<VoiceWidget />)
-    const el = container.querySelector('hanc-ai-pill-call')!
+    const el = container.querySelector('hanc-ai-pill-floating-call')!
     el.dispatchEvent(new Event('call-start'))
     el.dispatchEvent(new Event('call-start'))
     expect(linkMock).toHaveBeenCalledTimes(1)
@@ -44,7 +44,7 @@ describe('VoiceWidget', () => {
 
   it('після unmount listener знято', () => {
     const { container, unmount } = render(<VoiceWidget />)
-    const el = container.querySelector('hanc-ai-pill-call')!
+    const el = container.querySelector('hanc-ai-pill-floating-call')!
     unmount()
     el.dispatchEvent(new Event('call-start'))
     expect(linkMock).not.toHaveBeenCalled()
@@ -52,7 +52,7 @@ describe('VoiceWidget', () => {
 
   it('віджет не отримує токен чи дані користувача в атрибутах', () => {
     const { container } = render(<VoiceWidget />)
-    const attrs = container.querySelector('hanc-ai-pill-call')!.getAttributeNames()
+    const attrs = container.querySelector('hanc-ai-pill-floating-call')!.getAttributeNames()
     expect(attrs.some((a) => /token|user|identity|session/i.test(a))).toBe(false)
   })
 })

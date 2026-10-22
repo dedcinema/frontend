@@ -3,17 +3,8 @@
 import Image from 'next/image'
 import { useBookings } from '@/api/hooks/useBookings'
 import { Skeleton } from '@/components/ui/skeleton'
+import { formatDateTimeOrRaw } from '@/lib/format-datetime'
 import type { BookingDetails } from '@/types/api'
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleString('uk-UA', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 function BookingSkeleton() {
   return (
@@ -47,7 +38,7 @@ function BookingCard({ booking }: { booking: BookingDetails }) {
 
       <div className="flex flex-1 flex-col gap-1 min-w-0">
         <p className="font-semibold truncate">{booking.movie.title}</p>
-        <p className="text-sm text-muted-foreground">{booking.screeningTime}</p>
+        <p className="text-sm text-muted-foreground">{formatDateTimeOrRaw(booking.screeningTime)}</p>
         <p className="text-sm text-muted-foreground">
           {booking.theater.name} · {booking.hall.name}
         </p>

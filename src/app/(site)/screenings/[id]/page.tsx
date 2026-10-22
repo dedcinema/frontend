@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { SeatMap } from '@/components/features/screening/SeatMap'
+import { formatLongDate, formatTime } from '@/lib/format-datetime'
 import type { Hall, Movie, Screening } from '@/types/api'
 
 async function getScreening(id: string): Promise<Screening | null> {
@@ -26,17 +27,6 @@ async function getHall(id: string): Promise<Hall | null> {
   return res.json()
 }
 
-const dateFormatter = new Intl.DateTimeFormat('uk-UA', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-})
-
-const timeFormatter = new Intl.DateTimeFormat('uk-UA', {
-  hour: '2-digit',
-  minute: '2-digit',
-})
-
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -62,13 +52,13 @@ export default async function ScreeningPage({ params }: Props) {
   const end = new Date(screening.endAt)
 
   return (
-    <div className="flex flex-col gap-8 max-w-2xl mx-auto">
+    <div className="mx-auto flex max-w-2xl flex-col gap-8 pb-24">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold">
           {screeningWithBanner.movie?.title ?? 'Сеанс'}
         </h1>
         <p className="text-muted-foreground capitalize">
-          {dateFormatter.format(start)}, {timeFormatter.format(start)}–{timeFormatter.format(end)}
+          {formatLongDate(start)}, {formatTime(start)}–{formatTime(end)}
         </p>
         <p className="text-sm text-muted-foreground">{hall.name}</p>
       </div>
