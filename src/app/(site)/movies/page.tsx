@@ -3,10 +3,15 @@ import Link from 'next/link'
 import type { Movie, Category } from '@/types/api'
 import { MovieCard } from '@/components/features/movies/MovieCard'
 import { MovieGridSkeleton } from '@/components/features/movies/MovieGridSkeleton'
+import { MoviesPagination } from '@/components/features/movies/MoviesPagination'
+import { paginate } from '@/lib/paginate'
 import { ROUTES } from '@/constants/routes'
 import { cn } from '@/lib/utils'
 
-async function MovieGrid({ category }: { category?: string }) {
+const PAGE_SIZE = 12
+const CATALOG_ANCHOR = 'catalog'
+
+async function MovieGrid({ category, page: rawPage }: { category?: string; page?: string }) {
   const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/movies`)
   url.searchParams.set('limit', '100')
   if (category) url.searchParams.set('category', category)
@@ -25,11 +30,21 @@ async function MovieGrid({ category }: { category?: string }) {
     )
   }
 
+  const { items, page, totalPages } = paginate(movies, rawPage, PAGE_SIZE)
+
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {items.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
+      <MoviesPagination
+        page={page}
+        totalPages={totalPages}
+        category={category}
+        anchorId={CATALOG_ANCHOR}
+      />
     </div>
   )
 }
@@ -64,11 +79,11 @@ function CategoryFilter({ categories, active }: { categories: Category[]; active
 }
 
 interface MoviesPageProps {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string; page?: string }>
 }
 
 export default async function MoviesPage({ searchParams }: MoviesPageProps) {
-  const { category } = await searchParams
+  const { category, page } = await searchParams
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
     next: { revalidate: 3600 },
@@ -76,10 +91,10 @@ export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   const categories: Category[] = await res.json()
 
   return (
-    <div className="space-y-6">
+    <div id={CATALOG_ANCHOR} className="scroll-mt-20 space-y-6">
       <CategoryFilter categories={categories ?? []} active={category} />
       <Suspense key={category} fallback={<MovieGridSkeleton />}>
-        <MovieGrid category={category} />
+        <MovieGrid category={category} page={page} />
       </Suspense>
     </div>
   )
