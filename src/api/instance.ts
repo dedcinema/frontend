@@ -1,10 +1,17 @@
 import axios from 'axios'
 import { cookies } from '@/lib/cookies'
 import { ROUTES } from '@/constants/routes'
+import { redirectTo } from '@/lib/redirect'
 
-export const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL })
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+})
 
-export const instance = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL })
+export const instance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+})
 
 instance.interceptors.request.use((config) => {
   const token = cookies.get('accessToken')
@@ -41,7 +48,7 @@ instance.interceptors.response.use(
       failedQueue.forEach((p) => p.reject(err))
       failedQueue = []
       cookies.remove('accessToken')
-      window.location.href = ROUTES.AUTH.LOGIN
+      redirectTo(ROUTES.AUTH.LOGIN)
       return Promise.reject(err)
     } finally {
       isRefreshing = false
